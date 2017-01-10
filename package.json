@@ -1,0 +1,16 @@
+{
+  "devDependencies": {
+    "@types/jest": "^16.0.3",
+    "jest": "^18.1.0",
+    "typescript": "^2.1.4"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "ts"
+    ],
+    "transform": {
+      "^.+\\.(ts|tsx)$": "<rootDir>/preprocessor.js"
+    },
+    "testFilePath": "index.test.ts"
+  }
+}

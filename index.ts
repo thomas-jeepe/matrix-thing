@@ -37,8 +37,3 @@ export function diagonalize(a: AugMatrix, b: AugMatrix) {
   }
   return [a, b]
 }
-
-console.log(diagonalize(
-  [4, 3, 29],
-  [6, 7, 41]
-))

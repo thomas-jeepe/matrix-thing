@@ -37,8 +37,8 @@ export class Quadratic {
   solve() {
     let [a, b, c] = this.equation
     return [
-      (-b + Math.sqrt(this.determinant())) / (2 * a),
-      (-b - Math.sqrt(this.determinant())) / (2 * a)
+      (-b + Math.sqrt(this.discriminant())) / (2 * a),
+      (-b - Math.sqrt(this.discriminant())) / (2 * a)
     ]
   }
 
@@ -46,7 +46,7 @@ export class Quadratic {
    * Sees whether or not the equation will return a real number
    */
   isReal() {
-    return this.determinant() >= 0
+    return this.discriminant() >= 0
   }
 
   /**
@@ -67,7 +67,7 @@ export class Quadratic {
       return this.solve()
     }
     let [a, b, c] = this.equation
-    const factors = primeFactors(-this.determinant())
+    const factors = primeFactors(-this.discriminant())
     const grouped = groupByNumber(factors)
     let outSquare = 1
     let inSquare = 1
@@ -84,9 +84,9 @@ export class Quadratic {
   }
 
   /**
-   * Gets the determinant of the equation
+   * Gets the discriminant of the equation
    */
-  determinant() {
+  discriminant() {
     let [a, b, c] = this.equation
     return b * b - 4 * a * c
   }
@@ -113,7 +113,7 @@ export function primeFactors(n: number) {
   return factors
 }
 
-const result = new Quadratic([7, 3, 19])
+const result = new Quadratic([1, -14, 58])
 
 console.log(result.yIntercept())
 console.log(result.symmetricPoint())
@@ -123,3 +123,4 @@ console.log(result.focus())
 console.log(result.solve())
 console.log(result.isReal())
 console.log(result.imaginary())
+console.log(result.discriminant())

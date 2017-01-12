@@ -1,39 +1,125 @@
-function gcd(a, b) {
-  return !b ? a : gcd(b, a % b)
-}
+export class Quadratic {
+  constructor(public equation: [number, number, number]) {}
 
-function lcm(a: number, b: number) {
-  return (a * b) / gcd(a, b)
-}
-
-type AugMatrix = [number, number, number]
-
-export function bringTo0(a: AugMatrix, b: AugMatrix, i: number): AugMatrix {
-  const target = lcm(b[i], a[i])
-  const multiplier = -(target/b[i])
-  const multiplierB = target/a[i]
-  a = a.map(v => v * multiplierB)
-  a = a.map((v, i) => v + (multiplier * b[i]))
-  return a
-}
-
-export function bringTo1(a: AugMatrix, i: number): AugMatrix {
-  a = a.map(v => v/a[i])
-  return a = a.map(v => v === -0 ? 0 : v)
-}
-
-export function diagonalize(a: AugMatrix, b: AugMatrix) {
-  if (b[0] !== 0) {
-    b = bringTo0(b, a, 0)
+  xIntercept() {
+    return this.solve()
   }
-  if (b[1] !== 1) {
-    b = bringTo1(b, 1)
+
+  yIntercept() {
+    return { x: 0, y: this.equation[2] }
   }
-  if (a[1] !== 0) {
-    a = bringTo0(a, b, 1)
+
+  /**
+   * Gets the vertex of the parabola
+   */
+  vertex() {
+    let [a, b, c] = this.equation
+    return {
+      x: -b / (2 * a),
+      y: (-(b * b) / (4 * a)) + c,
+    }
   }
-  if (a[0] !== 1) {
-    a = bringTo1(a, 0)
+
+  /**
+   * Gets coords of focus of the parabola
+   */
+  focus() {
+    let [a, b, c] = this.equation
+    return {
+      x: this.vertex().x,
+      y: ((1 - b * b) / (4 * a)) + c
+    }
   }
-  return [a, b]
+
+  /**
+   * Solves the quadratic equation
+   */
+  solve() {
+    let [a, b, c] = this.equation
+    return [
+      (-b + Math.sqrt(this.determinant())) / (2 * a),
+      (-b - Math.sqrt(this.determinant())) / (2 * a)
+    ]
+  }
+
+  /**
+   * Sees whether or not the equation will return a real number
+   */
+  isReal() {
+    return this.determinant() >= 0
+  }
+
+  /**
+   * Gives the point symmetrical to the y Intercept, for easy graphing
+   */
+  symmetricPoint() {
+    return {
+      x: 2 * this.vertex().x,
+      y: this.yIntercept().y
+    }
+  }
+
+  /**
+   * Solves for imaginary numbers
+   */
+  imaginary() {
+    if (this.isReal()) {
+      return this.solve()
+    }
+    let [a, b, c] = this.equation
+    const factors = primeFactors(-this.determinant())
+    const grouped = groupByNumber(factors)
+    let outSquare = 1
+    let inSquare = 1
+    grouped.forEach((v, key) => {
+      while (v % 2 === 0 && v !== 0) {
+        outSquare = outSquare * key
+        v = v - 2
+      }
+      if (v === 1) {
+        inSquare = inSquare * key
+      }
+    })
+    return `${-b} ± ${outSquare === 1 ? '' : outSquare}i${inSquare !== 1 ? `*SQRT(${inSquare})`: ''} / ${2 * a}`
+  }
+
+  /**
+   * Gets the determinant of the equation
+   */
+  determinant() {
+    let [a, b, c] = this.equation
+    return b * b - 4 * a * c
+  }
 }
+
+export function groupByNumber(arr: number[]) {
+  return arr.reduce((acc, v) => {
+    acc.set(v, (acc.get(v) || 0) + 1)
+    return acc
+  }, new Map())
+}
+
+export function primeFactors(n: number) {
+  let factors = []
+  for (let i = 2; i < n; i++) {
+    while (n % i === 0) {
+      n = n / i
+      factors.push(i)
+    }
+  }
+  if (n !== 1) {
+    factors.push(n)
+  }
+  return factors
+}
+
+const result = new Quadratic([7, 3, 19])
+
+console.log(result.yIntercept())
+console.log(result.symmetricPoint())
+console.log(result.xIntercept())
+console.log(result.vertex())
+console.log(result.focus())
+console.log(result.solve())
+console.log(result.isReal())
+console.log(result.imaginary())

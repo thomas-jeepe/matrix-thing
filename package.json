@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "test": "jest"
+  },
   "devDependencies": {
     "@types/jest": "^16.0.3",
     "jest": "^18.1.0",
@@ -11,6 +14,6 @@
     "transform": {
       "^.+\\.(ts|tsx)$": "<rootDir>/preprocessor.js"
     },
-    "testFilePath": "index.test.ts"
+    "testRegex": "/__tests__/.*\\.(ts|tsx|js)$"
   }
 }

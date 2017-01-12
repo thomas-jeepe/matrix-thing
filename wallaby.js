@@ -5,7 +5,7 @@ module.exports = function () {
       'index.ts'
     ],
 
-    tests: ['index.test.ts'],
+    tests: ['**/__tests__/*'],
 
     env: {
       type: 'node',
